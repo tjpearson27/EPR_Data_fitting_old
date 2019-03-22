@@ -1,6 +1,6 @@
 #function to use to fit the T1 data (monoexp, stretched, biexp, spec_diff)
 
-function = ' '
+function = 'spec_diff'
 
 #general parameters (a and b should be 1 and 0 if normalized properly, 
 #T1 is best guess at lowest temp)

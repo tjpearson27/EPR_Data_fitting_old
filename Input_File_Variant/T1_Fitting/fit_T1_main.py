@@ -95,14 +95,14 @@ if fitfunc == 'monoexp':
             data.append((a1, T1, b))
         
         raw_data = [t, y, monoexp(t, a1, T1, b)]
-        os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
-        np.savetxt('Data_and_Fit_monoexp_{0}.txt'.format(file_.split('\\')[-1].replace('.dat', '')), 
+        os.chdir(os.path.abspath(os.curdir) + '/{0}'.format(directory))
+        np.savetxt('Data_and_Fit_monoexp_{0}.txt'.format(file_.split('/')[-1].replace('.dat', '')), 
                     np.transpose(raw_data), delimiter = ',', fmt='%s')
         os.chdir('..')
         
         print a1, T1, b
         plt.semilogx(t, y, 'go', t, monoexp(t, a1, T1, b), 'r--')            #plots data
-        plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.title(file_.split('/')[-1], fontsize=20)
         
         plt.show()
    
@@ -149,16 +149,16 @@ if fitfunc == 'spec_diff':
             data.append((a1, T1, q, b))
         
         raw_data = [t, y, spec_diff(t, a1, T1, q, b)]
-        os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
-        np.savetxt('Data_and_Fit_spec_diff_{0}.txt'.format(file_.split('\\')[-1].replace('.dat', '')), 
+        os.chdir(os.path.abspath(os.curdir) + '/{0}'.format(directory))
+        np.savetxt('Data_and_Fit_spec_diff_{0}.txt'.format(file_.split('/')[-1].replace('.dat', '')), 
                     np.transpose(raw_data), delimiter = ',', fmt='%s')        
         os.chdir('..')
         
         print a1, T1, q, b
         plt.semilogx(t, y, 'go', t, spec_diff(t, a1, T1, q, b), 'r--')                    
-        plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.title(file_.split('/')[-1], fontsize=20)
 
-        plt.show()
+        plt.show(block=False)
 
 
 if fitfunc == 'stretched':
@@ -203,13 +203,13 @@ if fitfunc == 'stretched':
             data.append((b, a1, T1, c))
         
         raw_data = [t, y, stretched(t, b, a1, T1, c)]
-        os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
-        np.savetxt('Data_and_Fit_stretched_{0}.txt'.format(file_.split('\\')[-1].replace('.dat', '')), 
+        os.chdir(os.path.abspath(os.curdir) + '/{0}'.format(directory))
+        np.savetxt('Data_and_Fit_stretched_{0}.txt'.format(file_.split('/')[-1].replace('.dat', '')), 
                     np.transpose(raw_data), delimiter = ',', fmt='%s')
         os.chdir('..')
         print b, a1, T1, c
         plt.semilogx(t, y, 'go', t, stretched(t, b, a1, T1, c), 'r--')                    
-        plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.title(file_.split('/')[-1], fontsize=20)
 
         plt.show()
 
@@ -261,16 +261,16 @@ if fitfunc == 'biexp':
             data.append((b, a1, T1long, a2, T1short))
         
         raw_data = [t, y, biexp(t, b, a1, T1long, a2, T1short)]
-        os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
-        np.savetxt('Data_and_Fit_biexp_{0}.txt'.format(file_.split('\\')[-1].replace('.dat', '')), 
+        os.chdir(os.path.abspath(os.curdir) + '/{0}'.format(directory))
+        np.savetxt('Data_and_Fit_biexp_{0}.txt'.format(file_.split('/')[-1].replace('.dat', '')), 
                     np.transpose(raw_data), delimiter = ',', fmt='%s')        
         os.chdir('..')
         print b, a1, T1long, a2, T1short
         plt.semilogx(t, y, 'go', t, biexp(t, b, a1, T1long, a2, T1short), 'r--')                    
-        plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.title(file_.split('/')[-1], fontsize=20)
 
         plt.show()
 
-os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
+os.chdir(os.path.abspath(os.curdir) + '/{0}'.format(directory))
 np.savetxt('parameters_T1_{0}.txt'.format(fitfunc), data, delimiter = ',',fmt='%s')
 
