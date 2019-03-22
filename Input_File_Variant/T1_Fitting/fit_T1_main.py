@@ -13,6 +13,7 @@ import glob
 import os 
 import numpy as np 
 import scipy.optimize
+import pandas as pd 
 import matplotlib.pyplot as plt
 import types,re,string
 import input_file
@@ -115,6 +116,8 @@ if fitfunc == 'spec_diff':
     params = np.array([a1, T1, q, b])
     data = [('a1', 'T1', 'q', 'b')]
 
+    i = 0
+
     for file_ in allfiles:
         a = np.loadtxt(file_, skiprows = 1)                                            
         t = a[:,0]
@@ -159,6 +162,8 @@ if fitfunc == 'spec_diff':
         plt.title(file_.split('/')[-1], fontsize=20)
 
         plt.show(block=False)
+
+        i += 1
 
 
 if fitfunc == 'stretched':
