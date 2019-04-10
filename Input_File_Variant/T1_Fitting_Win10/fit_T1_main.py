@@ -70,7 +70,7 @@ if fitfunc == 'monoexp':
         t = a[:,0]
         y = a[:,1]
 
-        popt, pcov = scipy.optimize.curve_fit(monoexp, t, y, params)         #least squares refinement of parameters against data
+        popt, pcov = scipy.optimize.curve_fit(monoexp, t, y, params, bounds = input_file.mono_bnds)         #least squares refinement of parameters against data
         a1, T1, b = popt          
         params = np.array([a1, T1, b])                                       #sets next temperature guess based on prev. temp refinement
         perr = np.sqrt(np.diag(pcov))                                        #converts covariance to esd
@@ -120,7 +120,7 @@ if fitfunc == 'spec_diff':
         t = a[:,0]
         y = a[:,1]
 
-        popt, pcov = scipy.optimize.curve_fit(spec_diff, t, y, params)     
+        popt, pcov = scipy.optimize.curve_fit(spec_diff, t, y, params, bounds = input_file.sd_bnds)     
         a1, T1, q, b = popt
         params = np.array([a1, T1, q, b])                                                             
         perr = np.sqrt(np.diag(pcov))                                                  
@@ -174,7 +174,7 @@ if fitfunc == 'stretched':
         t = a[:,0]
         y = a[:,1]
 
-        popt, pcov = scipy.optimize.curve_fit(stretched, t, y, params)     
+        popt, pcov = scipy.optimize.curve_fit(stretched, t, y, params, bounds = input_file.str_bnds)     
         b, a1, T1, c = popt
         params = np.array([b, a1, T1, c])                                                             
         perr = np.sqrt(np.diag(pcov))                                                   
@@ -228,7 +228,7 @@ if fitfunc == 'biexp':
         t = a[:,0]
         y = a[:,1]
 
-        popt, pcov = scipy.optimize.curve_fit(biexp, t, y, params)     
+        popt, pcov = scipy.optimize.curve_fit(biexp, t, y, params, bounds = input_file.biexp_bnds)     
         b, a1, T1long, a2, T1short = popt
         params = np.array([b, a1, T1long, a2, T1short])                                                            
         perr = np.sqrt(np.diag(pcov))                                                  
