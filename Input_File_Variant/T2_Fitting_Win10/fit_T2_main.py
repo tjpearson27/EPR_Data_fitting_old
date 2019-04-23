@@ -155,4 +155,4 @@ if fitfunc == 'str_no_ESEEM':
 
 
 os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
-np.savetxt('parameters_T1_{0}.txt'.format(fitfunc), data, delimiter = ',',fmt='%s')
+np.savetxt('parameters_T2_{0}.txt'.format(fitfunc), data, delimiter = ',',fmt='%s')
