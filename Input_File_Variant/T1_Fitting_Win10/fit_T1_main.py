@@ -107,7 +107,7 @@ if fitfunc == 'monoexp':
         print a1, T1, b
         
         plt.semilogx(t, y, 'go', t, monoexp(t, a1, T1, b), 'r--')            #plots data
-        plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.title('{0} K {1}'.format(temp, fitfunc), fontsize=20)
         plt.savefig('InvRec_{0}.png'.format(file_.split('\\')[-1]), format = 'png')
 
         if input_file.show_plots == True:       
@@ -170,7 +170,7 @@ if fitfunc == 'spec_diff':
         
         print a1, T1, q, b
         plt.semilogx(t, y, 'go', t, spec_diff(t, a1, T1, q, b), 'r--')                    
-        plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.title('{0} K {1}'.format(temp, fitfunc), fontsize=20)
         plt.savefig('InvRec_{0}.png'.format(file_.split('\\')[-1]), format = 'png')
 
         if input_file.show_plots == True:
@@ -232,7 +232,7 @@ if fitfunc == 'stretched':
         print b, a1, T1, c
         
         plt.semilogx(t, y, 'go', t, stretched(t, b, a1, T1, c), 'r--')                    
-        plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.title('{0} K {1}'.format(temp, fitfunc), fontsize=20)
         plt.savefig('InvRec_{0}.png'.format(file_.split('\\')[-1]), format = 'png')
         
         
@@ -300,7 +300,7 @@ if fitfunc == 'biexp':
         print b, a1, T1long, a2, T1short
         
         plt.semilogx(t, y, 'go', t, biexp(t, b, a1, T1long, a2, T1short), 'r--')                    
-        plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.title('{0} K {1}'.format(temp, fitfunc), fontsize=20)
         plt.savefig('InvRec_{0}.png'.format(file_.split('\\')[-1]), format = 'png')
         
         if input_file.show_plots == True:          
@@ -326,4 +326,10 @@ if input_file.show_temp_dep == True:
 
 
 np.savetxt('parameters_T1_{0}.txt'.format(fitfunc), data, delimiter = ',',fmt='%s')
-np.savetxt('temp_dep_{0}.txt'.format(fitfunc), temp_dep, delimiter = ',', fmt ='%s', header = 'Temp, T1, Error')
+
+if input_file.function == 'biexp':
+    np.savetxt('temp_dep_{0}.txt'.format(fitfunc), temp_dep, delimiter = ',', fmt ='%s', 
+                    header = 'Temp, T1, Error')
+else:
+    np.savetxt('temp_dep_{0}.txt'.format(fitfunc), temp_dep, delimiter = ',', fmt ='%s', 
+                    header = 'Temp, T1_long, T1_long_Error, T1_short, T1_short_Error')
