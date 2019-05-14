@@ -4,9 +4,9 @@
 # [x] error analysis
 # [x] saves data to file prescribed by input_file.py
 # [x] saves parameters to file
+# [x] temp dependence
 
 # yet to do:
-# temp dependence
 
 import Tkinter, tkFileDialog
 import glob 
@@ -56,7 +56,9 @@ fitfunc = input_file.function
 
 directory = input_file.folder_name
 createFolder('./{0}/'.format(directory))
-
+temps = input_file.temps
+temp_counter = 0
+temp_dep = []
 
 if fitfunc == 'monoexp':
     a1 = input_file.a
@@ -69,7 +71,8 @@ if fitfunc == 'monoexp':
         a = np.loadtxt(file_, skiprows = 1)                                  #takes normalized and phased files from Matt's matlab script output
         t = a[:,0]
         y = a[:,1]
-
+        temp = temps[temp_counter]
+        temp_counter += 1
         popt, pcov = scipy.optimize.curve_fit(monoexp, t, y, params, bounds = input_file.mono_bnds)         #least squares refinement of parameters against data
         a1, T1, b = popt          
         params = np.array([a1, T1, b])                                       #sets next temperature guess based on prev. temp refinement
@@ -95,16 +98,24 @@ if fitfunc == 'monoexp':
             data.append((a1, T1, b))
         
         raw_data = [t, y, monoexp(t, a1, T1, b)]
+        temp_dep.append([temp, T1, T1_err])
         os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
         np.savetxt('Data_and_Fit_monoexp_{0}.txt'.format(file_.split('\\')[-1].replace('.dat', '')), 
                     np.transpose(raw_data), delimiter = ',', fmt='%s')
-        os.chdir('..')
+        
         
         print a1, T1, b
+        
         plt.semilogx(t, y, 'go', t, monoexp(t, a1, T1, b), 'r--')            #plots data
         plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.savefig('InvRec_{0}.png'.format(file_.split('\\')[-1]), format = 'png')
+
+        if input_file.show_plots == True:       
+            plt.show()
+        else:
+            plt.close()
         
-        plt.show()
+        os.chdir('..')
    
 
 if fitfunc == 'spec_diff':
@@ -114,12 +125,13 @@ if fitfunc == 'spec_diff':
     q = input_file.q 
     params = np.array([a1, T1, q, b])
     data = [('a1', 'T1', 'q', 'b')]
-
+    print "a1, T1, q, b"
     for file_ in allfiles:
         a = np.loadtxt(file_, skiprows = 1)                                            
         t = a[:,0]
         y = a[:,1]
-
+        temp = temps[temp_counter]
+        temp_counter += 1
         popt, pcov = scipy.optimize.curve_fit(spec_diff, t, y, params, bounds = input_file.sd_bnds)     
         a1, T1, q, b = popt
         params = np.array([a1, T1, q, b])                                                             
@@ -149,16 +161,24 @@ if fitfunc == 'spec_diff':
             data.append((a1, T1, q, b))
         
         raw_data = [t, y, spec_diff(t, a1, T1, q, b)]
+        temp_dep.append([temp, T1, T1_err])
         os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
         np.savetxt('Data_and_Fit_spec_diff_{0}.txt'.format(file_.split('\\')[-1].replace('.dat', '')), 
                     np.transpose(raw_data), delimiter = ',', fmt='%s')        
-        os.chdir('..')
+        
+        
         
         print a1, T1, q, b
         plt.semilogx(t, y, 'go', t, spec_diff(t, a1, T1, q, b), 'r--')                    
         plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.savefig('InvRec_{0}.png'.format(file_.split('\\')[-1]), format = 'png')
 
-        plt.show()
+        if input_file.show_plots == True:
+            plt.show()
+        else:
+            plt.close()
+        os.chdir('..')
+        
 
 
 if fitfunc == 'stretched':
@@ -173,7 +193,8 @@ if fitfunc == 'stretched':
         a = np.loadtxt(file_, skiprows = 1)                                             
         t = a[:,0]
         y = a[:,1]
-
+        temp = temps[temp_counter]
+        temp_counter += 1
         popt, pcov = scipy.optimize.curve_fit(stretched, t, y, params, bounds = input_file.str_bnds)     
         b, a1, T1, c = popt
         params = np.array([b, a1, T1, c])                                                             
@@ -203,15 +224,24 @@ if fitfunc == 'stretched':
             data.append((b, a1, T1, c))
         
         raw_data = [t, y, stretched(t, b, a1, T1, c)]
+        temp_dep.append([temp, T1, T1_err])
         os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
         np.savetxt('Data_and_Fit_stretched_{0}.txt'.format(file_.split('\\')[-1].replace('.dat', '')), 
                     np.transpose(raw_data), delimiter = ',', fmt='%s')
-        os.chdir('..')
+        
         print b, a1, T1, c
+        
         plt.semilogx(t, y, 'go', t, stretched(t, b, a1, T1, c), 'r--')                    
         plt.title(file_.split('\\')[-1], fontsize=20)
-
-        plt.show()
+        plt.savefig('InvRec_{0}.png'.format(file_.split('\\')[-1]), format = 'png')
+        
+        
+        if input_file.show_plots == True:         
+            plt.show()
+        else: 
+            plt.close()
+        
+        os.chdir('..')
 
 
 if fitfunc == 'biexp':
@@ -227,7 +257,8 @@ if fitfunc == 'biexp':
         a = np.loadtxt(file_, skiprows = 1)                                            
         t = a[:,0]
         y = a[:,1]
-
+        temp = temps[temp_counter]
+        temp_counter += 1
         popt, pcov = scipy.optimize.curve_fit(biexp, t, y, params, bounds = input_file.biexp_bnds)     
         b, a1, T1long, a2, T1short = popt
         params = np.array([b, a1, T1long, a2, T1short])                                                            
@@ -261,16 +292,38 @@ if fitfunc == 'biexp':
             data.append((b, a1, T1long, a2, T1short))
         
         raw_data = [t, y, biexp(t, b, a1, T1long, a2, T1short)]
+        temp_dep.append([temp, T1long, T1long_err, T1short, T1short_err])
         os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
         np.savetxt('Data_and_Fit_biexp_{0}.txt'.format(file_.split('\\')[-1].replace('.dat', '')), 
                     np.transpose(raw_data), delimiter = ',', fmt='%s')        
-        os.chdir('..')
+       
         print b, a1, T1long, a2, T1short
+        
         plt.semilogx(t, y, 'go', t, biexp(t, b, a1, T1long, a2, T1short), 'r--')                    
         plt.title(file_.split('\\')[-1], fontsize=20)
+        plt.savefig('InvRec_{0}.png'.format(file_.split('\\')[-1]), format = 'png')
+        
+        if input_file.show_plots == True:          
+            plt.show()
+        else:
+            plt.close()
+        
+        os.chdir('..')
 
-        plt.show()
 
+temp_dep = np.asarray(temp_dep)
+print temp_dep
 os.chdir(os.path.abspath(os.curdir) + '\{0}'.format(directory))
-np.savetxt('parameters_T1_{0}.txt'.format(fitfunc), data, delimiter = ',',fmt='%s')
 
+if input_file.show_temp_dep == True:
+    if input_file.function == 'biexp':
+        plt.semilogy(temp_dep[:,0], temp_dep[:,1], 'ro', temp_dep[:,0], temp_dep[:,3], 'go')
+    else: 
+        plt.semilogy(temp_dep[:,0], temp_dep[:,1], 'ro')
+    
+    plt.savefig('Temp_dep_{0}.png'.format(fitfunc), format = 'png')
+    plt.show()
+
+
+np.savetxt('parameters_T1_{0}.txt'.format(fitfunc), data, delimiter = ',',fmt='%s')
+np.savetxt('temp_dep_{0}.txt'.format(fitfunc), temp_dep, delimiter = ',', fmt ='%s', header = 'Temp, T1, Error')
